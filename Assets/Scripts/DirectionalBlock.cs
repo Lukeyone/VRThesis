@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class DirectionalBlock : MonoBehaviour, ICodeBlock
+public class DirectionalBlock : CodeBlock
 {
     public enum Direction
     {
@@ -14,12 +16,14 @@ public class DirectionalBlock : MonoBehaviour, ICodeBlock
     [SerializeField] Direction _moveDirection;
     GameManager _gameManager;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _gameManager = FindObjectOfType<GameManager>();
     }
 
-    public void Execute()
+
+    public override void Execute()
     {
         switch (_moveDirection)
         {

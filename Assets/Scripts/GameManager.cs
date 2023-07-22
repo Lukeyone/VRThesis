@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// Responsible for moving the character 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] MapTracker _tracker;
