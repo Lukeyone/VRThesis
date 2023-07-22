@@ -13,9 +13,6 @@ public class GameManager : MonoBehaviour
         _tracker.MapCoordinates = _startMapCoordinates;
     }
 
-
-
-
     public void MoveUp()
     {
         _tracker.MoveTracker(Direction.Up);
@@ -33,5 +30,4 @@ public class GameManager : MonoBehaviour
     {
         _tracker.MoveTracker(Direction.Right);
     }
-
 }
