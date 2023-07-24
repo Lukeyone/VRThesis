@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+
 public class PlacementSlot : MonoBehaviour
 {
     public BlockType RequiredType;
     public CodeBlock PlacedBlock;
-    CodeBlock placeholderBlock;
-    Dictionary<Renderer, Material> _originalMatsDict = new();
-    [SerializeField] Material _holographicMaterial;
+    MeshRenderer _renderer;
 
     public void DisplaySlotHolographic(CodeBlock block)
     {
@@ -18,21 +17,21 @@ public class PlacementSlot : MonoBehaviour
             Debug.Log("Not of the required type, dun care ");
             return;
         }
-
-        placeholderBlock = Instantiate(block, transform);
-        placeholderBlock.transform.localPosition = Vector3.zero;
-        placeholderBlock.transform.localRotation = Quaternion.identity;
-        placeholderBlock.transform.localScale = Vector3.one;
-        Renderer[] renderers = placeholderBlock.GetComponentsInChildren<Renderer>();
-        _originalMatsDict.Clear();
-        foreach (Renderer r in renderers)
-        {
-            _originalMatsDict[r] = r.material;
-            r.material = _holographicMaterial;
-        }
+        _renderer.enabled = true;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void DisableSlotHolographic()
+    {
+        _renderer.enabled = false;
+    }
+
+    void Start()
+    {
+        _renderer = GetComponent<MeshRenderer>();
+        _renderer.enabled = false;
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         Debug.Log("Entered Trigger with slot, checking...");
         CodeBlock block = other.GetComponent<CodeBlock>();
@@ -56,13 +55,13 @@ public class PlacementSlot : MonoBehaviour
             Debug.LogError("This shouldn't happen");
             return;
         }
-        PlacedBlock = placeholderBlock;
+        PlacedBlock = block;
         block.GetComponent<XRGrabInteractable>().enabled = false;
-        Destroy(block);
-        foreach (var kvp in _originalMatsDict)
-        {
-            kvp.Key.material = kvp.Value;
-        }
+        block.transform.parent = transform;
+        block.transform.localPosition = Vector3.zero;
+        block.transform.localRotation = Quaternion.identity;
+        block.transform.localScale = Vector3.one;
+
         Debug.Log("Placed block " + block.gameObject.name + " at " + gameObject.name);
     }
 }

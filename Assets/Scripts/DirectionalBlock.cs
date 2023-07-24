@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class DirectionalBlock : CodeBlock
+public class DirectionalBlock : ExecutableCodeBlock
 {
     public enum Direction
     {
@@ -21,7 +21,6 @@ public class DirectionalBlock : CodeBlock
         base.Start();
         _gameManager = FindObjectOfType<GameManager>();
     }
-
 
     public override void Execute()
     {
@@ -40,5 +39,10 @@ public class DirectionalBlock : CodeBlock
                 _gameManager.MoveDown();
                 break;
         }
+    }
+
+    public override void CheckIfExecutable()
+    {
+        IsExecutable = true;
     }
 }

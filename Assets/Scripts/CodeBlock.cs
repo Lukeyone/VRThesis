@@ -6,14 +6,14 @@ using UnityEngine.XR.Interaction.Toolkit;
 [RequireComponent(typeof(XRGrabInteractable))]
 public abstract class CodeBlock : MonoBehaviour
 {
-    public BlockType Type;
-    public abstract void Execute();
     protected XRGrabInteractable _grabInteractable;
+    public BlockType Type { get; protected set; }
     protected CodeTray _codeTray;
     protected virtual void Start()
     {
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _grabInteractable.selectEntered.AddListener(OnGrab);
+        _grabInteractable.selectExited.AddListener(OnRelease);
         _codeTray = FindObjectOfType<CodeTray>();
     }
 
@@ -21,10 +21,15 @@ public abstract class CodeBlock : MonoBehaviour
     {
         _codeTray.DisplaySlotsFor(this);
     }
+
+    protected virtual void OnRelease(SelectExitEventArgs args)
+    {
+        _codeTray.DisableHolographicSlots();
+    }
 }
 
 public enum BlockType
 {
-    Executable,
-    Conditional
+    ExecutableCodeBlock = 1,
+    ConditionalCodeBlock = 2
 }
