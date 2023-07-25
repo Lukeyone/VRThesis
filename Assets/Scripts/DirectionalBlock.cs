@@ -26,13 +26,17 @@ public class DirectionalBlock : ExecutableCodeBlock
         switch (_moveDirection)
         {
             case Direction.Left:
+                Debug.Log("movin left");
                 _gameManager.MoveLeft();
                 break;
             case Direction.Right:
+                Debug.Log("movin right");
                 _gameManager.MoveRight();
                 break;
             case Direction.Up:
                 _gameManager.MoveUp();
+                Debug.Log("movin up");
+
                 break;
             case Direction.Down:
                 _gameManager.MoveDown();

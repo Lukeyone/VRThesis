@@ -14,7 +14,7 @@ public class PlacementSlot : MonoBehaviour
     public void DisplaySlotHolographic(CodeBlock block)
     {
         if (PlacedBlock != null) return;
-        if (block.Type != RequiredType && RequiredType != BlockType.All)
+        if (block.Type != RequiredType)
         {
             Debug.Log("Not of the required type, dun care ");
             return;
@@ -49,7 +49,7 @@ public class PlacementSlot : MonoBehaviour
             Debug.Log("It's a " + other.gameObject.name + ", dun care");
             return;
         }
-        if (block.Type != RequiredType && RequiredType != BlockType.All)
+        if (block.Type != RequiredType)
         {
             return;
         }
@@ -58,7 +58,7 @@ public class PlacementSlot : MonoBehaviour
 
     void PlaceBlock(CodeBlock block)
     {
-        if (block.Type != RequiredType && RequiredType != BlockType.All)
+        if (block.Type != RequiredType)
         {
             Debug.LogError("This shouldn't happen");
             return;

@@ -11,6 +11,5 @@ public class WallCheckCodeBlock : ConditionalCodeBlock
 
     public override void OnPlacement()
     {
-        throw new System.NotImplementedException();
     }
 }

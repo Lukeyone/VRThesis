@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class CodeTray : MonoBehaviour
 {
-    public List<PlacementSlot> AvailableSlots = new();
+    public List<PlacementSlot> TraySlots = new();
+    List<PlacementSlot> _codeBlocksSlots = new();
 
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
     {
-        Debug.Log("Displaying slots for code block " + codeBlock.gameObject.name);
-        foreach (PlacementSlot slot in AvailableSlots)
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            slot.DisplaySlotHolographic(codeBlock);
+        }
+        foreach (PlacementSlot slot in _codeBlocksSlots)
         {
             slot.DisplaySlotHolographic(codeBlock);
         }
@@ -18,9 +22,11 @@ public class CodeTray : MonoBehaviour
 
     public void DisableHolographicSlots()
     {
-        Debug.Log("Disabling slots");
-
-        foreach (PlacementSlot slot in AvailableSlots)
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            slot.DisableSlotHolographic();
+        }
+        foreach (PlacementSlot slot in _codeBlocksSlots)
         {
             slot.DisableSlotHolographic();
         }
@@ -28,6 +34,27 @@ public class CodeTray : MonoBehaviour
 
     public void AddPlacementSlots(PlacementSlot[] slots)
     {
-        AvailableSlots.AddRange(slots);
+        _codeBlocksSlots.AddRange(slots);
+    }
+
+    public void ExecuteTraySlots()
+    {
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            if (slot.PlacedBlock == null) continue;
+            var block = (ExecutableCodeBlock)slot.PlacedBlock;
+            block.CheckIfExecutable();
+            if (!block.IsExecutable)
+            {
+                Debug.LogError("Cannot execute when slots aren't filled");
+                return;
+            }
+        }
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            if (slot.PlacedBlock == null) continue;
+            var block = (ExecutableCodeBlock)slot.PlacedBlock;
+            block.Execute();
+        }
     }
 }
