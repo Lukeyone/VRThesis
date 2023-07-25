@@ -8,4 +8,9 @@ public class WallCheckCodeBlock : ConditionalCodeBlock
     {
         return true;
     }
+
+    public override void OnPlacement()
+    {
+        throw new System.NotImplementedException();
+    }
 }

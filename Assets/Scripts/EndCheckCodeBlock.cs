@@ -8,4 +8,9 @@ public class EndCheckCodeBlock : ConditionalCodeBlock
     {
         throw new System.NotImplementedException();
     }
+
+    public override void OnPlacement()
+    {
+        throw new System.NotImplementedException();
+    }
 }

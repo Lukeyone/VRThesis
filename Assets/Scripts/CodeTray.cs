@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class CodeTray : MonoBehaviour
 {
-    List<PlacementSlot> availableSlots = new();
+    public List<PlacementSlot> AvailableSlots = new();
 
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
     {
-        foreach (PlacementSlot slot in availableSlots)
+        Debug.Log("Displaying slots for code block " + codeBlock.gameObject.name);
+        foreach (PlacementSlot slot in AvailableSlots)
         {
             slot.DisplaySlotHolographic(codeBlock);
         }
@@ -17,9 +18,16 @@ public class CodeTray : MonoBehaviour
 
     public void DisableHolographicSlots()
     {
-        foreach (PlacementSlot slot in availableSlots)
+        Debug.Log("Disabling slots");
+
+        foreach (PlacementSlot slot in AvailableSlots)
         {
             slot.DisableSlotHolographic();
         }
+    }
+
+    public void AddPlacementSlots(PlacementSlot[] slots)
+    {
+        AvailableSlots.AddRange(slots);
     }
 }

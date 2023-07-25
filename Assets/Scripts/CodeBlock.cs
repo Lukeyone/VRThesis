@@ -26,10 +26,13 @@ public abstract class CodeBlock : MonoBehaviour
     {
         _codeTray.DisableHolographicSlots();
     }
+
+    public abstract void OnPlacement();
 }
 
 public enum BlockType
 {
+    All = 0,
     ExecutableCodeBlock = 1,
     ConditionalCodeBlock = 2
 }

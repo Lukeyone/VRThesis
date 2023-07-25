@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IfCodeBlock : ExecutableCodeBlock
 {
+    public PlacementSlot InputSlot;
     public PlacementSlot OutputForTrue;
     public PlacementSlot OutputForFalse;
 
@@ -11,6 +12,7 @@ public class IfCodeBlock : ExecutableCodeBlock
     {
         IsExecutable = !(InputSlot.PlacedBlock == null || OutputForFalse.PlacedBlock == null || OutputForTrue.PlacedBlock == null);
     }
+
 
     public override void Execute()
     {
@@ -33,5 +35,11 @@ public class IfCodeBlock : ExecutableCodeBlock
             execIfFalse.Execute();
         }
         Debug.Log("executed if code block");
+    }
+
+    public override void OnPlacement()
+    {
+        PlacementSlot[] slots = {InputSlot, OutputForFalse, OutputForTrue};
+        _codeTray.AddPlacementSlots(slots);
     }
 }

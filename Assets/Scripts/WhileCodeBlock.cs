@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WhileCodeBlock : ExecutableCodeBlock
 {
+    public PlacementSlot InputSlot;
     public PlacementSlot OutputSlot;
 
     public override void CheckIfExecutable()
@@ -12,6 +13,11 @@ public class WhileCodeBlock : ExecutableCodeBlock
     }
 
     public override void Execute()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void OnPlacement()
     {
         throw new System.NotImplementedException();
     }

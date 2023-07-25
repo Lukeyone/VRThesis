@@ -5,14 +5,14 @@ using UnityEngine;
 public abstract class ExecutableCodeBlock : CodeBlock
 {
     public bool IsExecutable = false;
-    public PlacementSlot InputSlot;
 
     protected override void Start()
     {
         base.Start();
         Type = BlockType.ExecutableCodeBlock;
+        CheckIfExecutable();
     }
-    
+
     public abstract void CheckIfExecutable();
     public abstract void Execute();
 }
