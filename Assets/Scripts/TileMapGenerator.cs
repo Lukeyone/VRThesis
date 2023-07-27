@@ -14,6 +14,7 @@ public class TileMapGenerator : MonoBehaviour
     [SerializeField] List<Tile> tilesList = new List<Tile>();
     [SerializeField] int mapWidth = 3;
 
+    // Return true if we can move in that direction
     public bool CheckIfCanMove(Vector2 startMapCoords, Direction direction)
     {
         Vector2 endMapCoords = MoveCoordsInDirection(startMapCoords, direction);
@@ -23,6 +24,7 @@ public class TileMapGenerator : MonoBehaviour
         return !tilesList[listIndex].IsObstacle;
     }
 
+    // Return the destination coords from given mapCoords and direction
     public Vector2 MoveCoordsInDirection(Vector2 startMapCoords, Direction direction)
     {
         Vector2 endMapCoords = startMapCoords;
@@ -60,7 +62,7 @@ public class TileMapGenerator : MonoBehaviour
         SetTilesCoords();
     }
 
-    int MapCoordsToListIndex(Vector2 coords)
+    public int MapCoordsToListIndex(Vector2 coords)
     {
         return (int)(coords.x * mapWidth + coords.y);
     }
