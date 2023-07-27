@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WallCheckCodeBlock : ConditionalCodeBlock
 {
+
     public override bool CheckCondition()
     {
         return true;

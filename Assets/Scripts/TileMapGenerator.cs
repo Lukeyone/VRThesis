@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum Direction
 {
-    Left,
-    Right,
-    Up,
-    Down
+    Left = 270,
+    Right = 90,
+    Up = 0,
+    Down = 180
 }
 
 public class TileMapGenerator : MonoBehaviour
@@ -44,6 +44,11 @@ public class TileMapGenerator : MonoBehaviour
                 break;
         }
         return endMapCoords;
+    }
+
+    public Tile GetTileFromMapCoords(Vector2 coords)
+    {
+        return tilesList[MapCoordsToListIndex(coords)];
     }
 
     public void SetBridgeActive(Vector2 mapCoords, bool active)

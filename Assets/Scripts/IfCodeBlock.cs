@@ -8,15 +8,14 @@ public class IfCodeBlock : ExecutableCodeBlock
     public PlacementSlot OutputForTrue;
     public PlacementSlot OutputForFalse;
 
-    public override void CheckIfExecutable()
+    public override bool IsExecutable()
     {
-        IsExecutable = !(InputSlot.PlacedBlock == null || OutputForFalse.PlacedBlock == null || OutputForTrue.PlacedBlock == null);
+        return InputSlot.PlacedBlock != null && (OutputForFalse.PlacedBlock != null || OutputForTrue.PlacedBlock != null);
     }
-
 
     public override void Execute()
     {
-        if (!IsExecutable)
+        if (!IsExecutable())
         {
             Debug.LogError("Block is not executable");
             return;
@@ -39,7 +38,7 @@ public class IfCodeBlock : ExecutableCodeBlock
 
     public override void OnPlacement()
     {
-        PlacementSlot[] slots = {InputSlot, OutputForFalse, OutputForTrue};
+        PlacementSlot[] slots = { InputSlot, OutputForFalse, OutputForTrue };
         _codeTray.AddPlacementSlots(slots);
     }
 }

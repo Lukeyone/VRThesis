@@ -4,15 +4,16 @@ using UnityEngine;
 
 public abstract class ExecutableCodeBlock : CodeBlock
 {
-    public bool IsExecutable = false;
-
     protected override void Start()
     {
         base.Start();
         Type = BlockType.ExecutableCodeBlock;
-        CheckIfExecutable();
+        IsExecutable();
     }
 
-    public abstract void CheckIfExecutable();
+    public virtual bool IsExecutable()
+    {
+        return true;
+    }
     public abstract void Execute();
 }

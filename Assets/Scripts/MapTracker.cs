@@ -5,11 +5,14 @@ using UnityEngine.Events;
 
 public class MapTracker : MonoBehaviour
 {
+    [SerializeField] Transform player;
+    [SerializeField] Vector3 playerPositionOffsetFromTile = new Vector3(0, .5f, 0);
     [SerializeField] TileMapGenerator map;
     [SerializeField] Tile startTile;
     [SerializeField] Tile goalTile;
     public UnityEvent OnGoalReached;
     public UnityEvent OnLevelFailed;
+    Direction _facingDirection = Direction.Up;
     Vector2 _mapCoordinates;
     Stack<Vector2> visitedCoords = new Stack<Vector2>();
 
@@ -20,16 +23,47 @@ public class MapTracker : MonoBehaviour
 
     void Init()
     {
-        _mapCoordinates = startTile.MapCoordinates;
+        _facingDirection = Direction.Up;
+        player.transform.rotation = Quaternion.Euler(Vector3.zero);
+        MoveToCoords(startTile.MapCoordinates);
+    }
+
+    void MoveToCoords(Vector2 coords)
+    {
+        _mapCoordinates = coords;
         map.SetBridgeActive(_mapCoordinates, true);
         visitedCoords.Push(_mapCoordinates);
+        Vector3 tilePos = map.GetTileFromMapCoords(_mapCoordinates).transform.position;
+        player.transform.position = tilePos + playerPositionOffsetFromTile;
+    }
+
+    public void RotateCharacter(bool isRotateToLeft)
+    {
+        switch (_facingDirection)
+        {
+            case Direction.Left:
+                _facingDirection = isRotateToLeft ? Direction.Down : Direction.Up;
+                break;
+            case Direction.Down:
+                _facingDirection = isRotateToLeft ? Direction.Right : Direction.Left;
+                break;
+            case Direction.Up:
+                _facingDirection = isRotateToLeft ? Direction.Left : Direction.Right;
+                break;
+            case Direction.Right:
+                _facingDirection = isRotateToLeft ? Direction.Up : Direction.Down;
+                break;
+        }
+        Vector3 newRot = player.transform.rotation.eulerAngles;
+        newRot.y = (float)_facingDirection;
+        player.transform.rotation = Quaternion.Euler(newRot);
     }
 
     // Attempts to move the tracker and returns the result of the action
-    public bool MoveTracker(Direction direction)
+    public bool MoveTracker()
     {
-        Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, direction);
-        bool canMove = map.CheckIfCanMove(_mapCoordinates, direction) && !visitedCoords.Contains(destination); // Only allow moving past a tile once
+        Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
+        bool canMove = map.CheckIfCanMove(_mapCoordinates, _facingDirection) && !visitedCoords.Contains(destination); // Only allow moving past a tile once
 
         if (!canMove) // Fail level if cannot move
         {
@@ -37,9 +71,7 @@ public class MapTracker : MonoBehaviour
             return false;
         }
         // Otherwise, move the tracker and build a new bridge
-        _mapCoordinates = destination;
-        map.SetBridgeActive(_mapCoordinates, true);
-        visitedCoords.Push(_mapCoordinates);
+        MoveToCoords(destination);
         if (_mapCoordinates == goalTile.MapCoordinates)
         {
             Debug.Log("Reached goal");
@@ -48,7 +80,7 @@ public class MapTracker : MonoBehaviour
         return true;
     }
 
-    public void FailLevel()
+    void FailLevel()
     {
         // Destroy all built bridges
         foreach (Vector2 coords in visitedCoords)

@@ -8,21 +8,16 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] MapTracker _tracker;
 
-    public void MoveUp()
+    public void RotateLeft()
     {
-        _tracker.MoveTracker(Direction.Up);
+        _tracker.RotateCharacter(true);
     }
-
-    public void MoveDown()
+    public void RotateRight()
     {
-        _tracker.MoveTracker(Direction.Down);
+        _tracker.RotateCharacter(false);
     }
-    public void MoveLeft()
+    public void Move()
     {
-        _tracker.MoveTracker(Direction.Left);
-    }
-    public void MoveRight()
-    {
-        _tracker.MoveTracker(Direction.Right);
+        _tracker.MoveTracker();
     }
 }

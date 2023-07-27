@@ -7,9 +7,9 @@ public class WhileCodeBlock : ExecutableCodeBlock
     public PlacementSlot InputSlot;
     public PlacementSlot OutputSlot;
 
-    public override void CheckIfExecutable()
+    public override bool IsExecutable()
     {
-        throw new System.NotImplementedException();
+        return true;
     }
 
     public override void Execute()

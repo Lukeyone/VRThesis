@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CodeTray : MonoBehaviour
 {
     public List<PlacementSlot> TraySlots = new();
+    public UnityEvent<string> OnIllegalExecution;
     List<PlacementSlot> _codeBlocksSlots = new();
+
 
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
@@ -19,7 +22,8 @@ public class CodeTray : MonoBehaviour
             slot.DisplaySlotHolographic(codeBlock);
         }
     }
-
+    
+    /// Disable all holographic slots when the code block is released
     public void DisableHolographicSlots()
     {
         foreach (PlacementSlot slot in TraySlots)
@@ -43,10 +47,10 @@ public class CodeTray : MonoBehaviour
         {
             if (slot.PlacedBlock == null) continue;
             var block = (ExecutableCodeBlock)slot.PlacedBlock;
-            block.CheckIfExecutable();
-            if (!block.IsExecutable)
+            if (!block.IsExecutable())
             {
-                Debug.LogError("Cannot execute when slots aren't filled");
+                Debug.LogError("You need to fill the slots of the " + block.gameObject.name + " block");
+                OnIllegalExecution?.Invoke("You need to fill the slots of the " + block.gameObject.name + " block");
                 return;
             }
         }
