@@ -7,7 +7,6 @@ public class CodeTray : MonoBehaviour
 {
     public List<PlacementSlot> TraySlots = new();
     public UnityEvent<string> OnIllegalExecution;
-    public float TimeBetweenActions = 5;
     List<PlacementSlot> _codeBlocksSlots = new();
 
 
@@ -59,6 +58,11 @@ public class CodeTray : MonoBehaviour
 
         // Execute em!
         StartCoroutine(ExecuteSlots());
+    }
+
+    public void ResetTraySlots()
+    {
+        _codeBlocksSlots.Clear();
     }
 
     IEnumerator ExecuteSlots()
