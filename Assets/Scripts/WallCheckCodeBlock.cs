@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class WallCheckCodeBlock : ConditionalCodeBlock
 {
+    MapTracker _mapTracker;
+    protected override void Start()
+    {
+        base.Start();
+        _mapTracker = FindObjectOfType<MapTracker>();
+    }
 
     public override bool CheckCondition()
     {
-        return true;
-    }
-
-    public override void OnPlacement()
-    {
+        return !_mapTracker.CheckIfCanMove();
     }
 }

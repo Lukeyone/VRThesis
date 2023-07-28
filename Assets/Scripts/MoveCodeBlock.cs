@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class DirectionalBlock : ExecutableCodeBlock
+public class MoveCodeBlock : ExecutableCodeBlock
 {
-    [SerializeField] bool rotatesLeft = true;
     MapTracker _mapTracker;
 
     protected override void Start()
@@ -16,6 +14,7 @@ public class DirectionalBlock : ExecutableCodeBlock
 
     public override void Execute()
     {
-        _mapTracker.RotateCharacter(rotatesLeft);
+        Debug.Log("Movewd");
+        _mapTracker.MoveTracker();
     }
 }

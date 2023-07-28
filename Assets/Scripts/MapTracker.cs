@@ -25,10 +25,10 @@ public class MapTracker : MonoBehaviour
     {
         _facingDirection = Direction.Up;
         player.transform.rotation = Quaternion.Euler(Vector3.zero);
-        MoveToCoords(startTile.MapCoordinates);
+        MoveTrackerToCoords(startTile.MapCoordinates);
     }
 
-    void MoveToCoords(Vector2 coords)
+    void MoveTrackerToCoords(Vector2 coords)
     {
         _mapCoordinates = coords;
         map.SetBridgeActive(_mapCoordinates, true);
@@ -39,6 +39,7 @@ public class MapTracker : MonoBehaviour
 
     public void RotateCharacter(bool isRotateToLeft)
     {
+        Debug.Log("rotated to " + (isRotateToLeft ? "Left" : "Right"));
         switch (_facingDirection)
         {
             case Direction.Left:
@@ -62,8 +63,7 @@ public class MapTracker : MonoBehaviour
     // Attempts to move the tracker and returns the result of the action
     public bool MoveTracker()
     {
-        Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
-        bool canMove = map.CheckIfCanMove(_mapCoordinates, _facingDirection) && !visitedCoords.Contains(destination); // Only allow moving past a tile once
+        bool canMove = CheckIfCanMove();
 
         if (!canMove) // Fail level if cannot move
         {
@@ -71,13 +71,20 @@ public class MapTracker : MonoBehaviour
             return false;
         }
         // Otherwise, move the tracker and build a new bridge
-        MoveToCoords(destination);
+        Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
+        MoveTrackerToCoords(destination);
         if (_mapCoordinates == goalTile.MapCoordinates)
         {
             Debug.Log("Reached goal");
             OnGoalReached?.Invoke();
         }
         return true;
+    }
+
+    public bool CheckIfCanMove()
+    {
+        Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
+        return map.CheckIfCanMove(_mapCoordinates, _facingDirection) && !visitedCoords.Contains(destination); // Only allow moving past a tile once
     }
 
     void FailLevel()

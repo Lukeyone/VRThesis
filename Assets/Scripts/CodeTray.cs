@@ -7,6 +7,7 @@ public class CodeTray : MonoBehaviour
 {
     public List<PlacementSlot> TraySlots = new();
     public UnityEvent<string> OnIllegalExecution;
+    public float TimeBetweenActions = 5;
     List<PlacementSlot> _codeBlocksSlots = new();
 
 
@@ -22,7 +23,7 @@ public class CodeTray : MonoBehaviour
             slot.DisplaySlotHolographic(codeBlock);
         }
     }
-    
+
     /// Disable all holographic slots when the code block is released
     public void DisableHolographicSlots()
     {
@@ -43,6 +44,7 @@ public class CodeTray : MonoBehaviour
 
     public void ExecuteTraySlots()
     {
+        // Perform a check to see if there is any nonexecutable code blocks
         foreach (PlacementSlot slot in TraySlots)
         {
             if (slot.PlacedBlock == null) continue;
@@ -54,11 +56,19 @@ public class CodeTray : MonoBehaviour
                 return;
             }
         }
+
+        // Execute em!
+        StartCoroutine(ExecuteSlots());
+    }
+
+    IEnumerator ExecuteSlots()
+    {
         foreach (PlacementSlot slot in TraySlots)
         {
             if (slot.PlacedBlock == null) continue;
             var block = (ExecutableCodeBlock)slot.PlacedBlock;
             block.Execute();
+            yield return new WaitForSeconds(block.ActionCompleteTime);
         }
     }
 }

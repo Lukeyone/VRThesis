@@ -6,19 +6,38 @@ public class WhileCodeBlock : ExecutableCodeBlock
 {
     public PlacementSlot InputSlot;
     public PlacementSlot OutputSlot;
+    [SerializeField] int _maxIterations = 30;
 
     public override bool IsExecutable()
     {
-        return true;
+        return InputSlot != null && OutputSlot != null;
     }
 
     public override void Execute()
     {
-        throw new System.NotImplementedException();
+        if (!IsExecutable())
+        {
+            Debug.LogError("Block is not executable");
+            return;
+        }
+        ConditionalCodeBlock condition = (ConditionalCodeBlock)InputSlot.PlacedBlock;
+        ExecutableCodeBlock action = (ExecutableCodeBlock)OutputSlot.PlacedBlock;
+        int counter = 0;
+        while (condition.CheckCondition())
+        {
+            action.Execute();
+            counter++;
+            if (counter > _maxIterations)
+            {
+                Debug.LogError("Max iternations reached, breaking out of loop");
+                break;
+            }
+        }
     }
 
     public override void OnPlacement()
     {
-        throw new System.NotImplementedException();
+        PlacementSlot[] slots = { InputSlot, OutputSlot };
+        _codeTray.AddPlacementSlots(slots);
     }
 }

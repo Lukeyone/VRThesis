@@ -27,7 +27,9 @@ public abstract class CodeBlock : MonoBehaviour
         _codeTray.DisableHolographicSlots();
     }
 
-    public abstract void OnPlacement();
+    public virtual void OnPlacement()
+    {
+    }
 }
 
 public enum BlockType
