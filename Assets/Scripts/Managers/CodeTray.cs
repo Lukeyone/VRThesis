@@ -7,8 +7,8 @@ public class CodeTray : MonoBehaviour
 {
     public List<PlacementSlot> TraySlots = new();
     public UnityEvent<string> OnIllegalExecution;
+    public UnityEvent<bool> OnExecutionCompleted;
     List<PlacementSlot> _codeBlocksSlots = new();
-
 
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
@@ -41,6 +41,15 @@ public class CodeTray : MonoBehaviour
         _codeBlocksSlots.AddRange(slots);
     }
 
+    public void ResetTraySlots()
+    {
+        _codeBlocksSlots.Clear();
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            slot.PlacedBlock = null;
+        }
+    }
+
     public void ExecuteTraySlots()
     {
         // Perform a check to see if there is any nonexecutable code blocks
@@ -55,14 +64,8 @@ public class CodeTray : MonoBehaviour
                 return;
             }
         }
-
         // Execute em!
         StartCoroutine(ExecuteSlots());
-    }
-
-    public void ResetTraySlots()
-    {
-        _codeBlocksSlots.Clear();
     }
 
     IEnumerator ExecuteSlots()
@@ -72,7 +75,19 @@ public class CodeTray : MonoBehaviour
             if (slot.PlacedBlock == null) continue;
             var block = (ExecutableCodeBlock)slot.PlacedBlock;
             block.Execute();
-            yield return new WaitForSeconds(block.ActionCompleteTime);
+
+            while (block.IsExecuting)
+                yield return null;
+
+
+            if (!block.ExecutionResult)
+            {
+                Debug.Log("The block " + block.gameObject.name + " in code tray returned false");
+                OnExecutionCompleted?.Invoke(false);
+                yield break;
+            }
+            // yield return new WaitForSeconds(block.ActionCompleteTime);
         }
+        OnExecutionCompleted?.Invoke(true);
     }
 }

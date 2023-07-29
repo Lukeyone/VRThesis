@@ -18,21 +18,25 @@ public class IfCodeBlock : ExecutableCodeBlock
         if (!IsExecutable())
         {
             Debug.LogError("Block is not executable");
+            ExecutionResult = false;
             return;
         }
-
+        IsExecuting = true;
+        StartCoroutine(ExecuteIf());
+    }
+    IEnumerator ExecuteIf()
+    {
         ConditionalCodeBlock condition = (ConditionalCodeBlock)InputSlot.PlacedBlock;
-        ExecutableCodeBlock execIfTrue = (ExecutableCodeBlock)OutputForTrue.PlacedBlock;
-        ExecutableCodeBlock execIfFalse = (ExecutableCodeBlock)OutputForFalse.PlacedBlock;
+        CodeBlock executedBlock = condition.CheckCondition() ? OutputForTrue.PlacedBlock : OutputForFalse.PlacedBlock;
+        ExecutableCodeBlock execBlock = (ExecutableCodeBlock)executedBlock;
 
-        if (condition.CheckCondition())
+        execBlock.Execute();
+        while (execBlock.IsExecuting)
         {
-            execIfTrue.Execute();
+            yield return null;
         }
-        else
-        {
-            execIfFalse.Execute();
-        }
+        ExecutionResult = execBlock.ExecutionResult;
+        IsExecuting = false;
         Debug.Log("executed if code block");
     }
 

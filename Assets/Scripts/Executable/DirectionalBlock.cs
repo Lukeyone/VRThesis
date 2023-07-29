@@ -17,5 +17,6 @@ public class DirectionalBlock : ExecutableCodeBlock
     public override void Execute()
     {
         _mapTracker.RotateCharacter(rotatesLeft);
+        ExecutionResult = true;
     }
 }

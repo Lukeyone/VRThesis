@@ -14,7 +14,6 @@ public class MoveCodeBlock : ExecutableCodeBlock
 
     public override void Execute()
     {
-        Debug.Log("Movewd");
-        _mapTracker.MoveTracker();
+        ExecutionResult = _mapTracker.MoveTracker();
     }
 }

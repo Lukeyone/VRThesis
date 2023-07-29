@@ -62,13 +62,15 @@ public class TileMapGenerator : MonoBehaviour
         tilesList[listIndex].SetBridgeActive(active);
     }
 
-    void Start()
+    void Awake()
     {
         SetTilesCoords();
     }
 
     public int MapCoordsToListIndex(Vector2 coords)
     {
+        if (coords.x < 0 || coords.x >= mapWidth || coords.y < 0 || coords.y >= mapWidth)
+            return -999;
         return (int)(coords.x * mapWidth + coords.y);
     }
 

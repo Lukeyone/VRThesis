@@ -8,20 +8,12 @@ public class MapTracker : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Vector3 playerPositionOffsetFromTile = new Vector3(0, .5f, 0);
     [SerializeField] TileMapGenerator map;
-    [SerializeField] Tile startTile;
-    [SerializeField] Tile goalTile;
-    public UnityEvent OnGoalReached;
-    public UnityEvent OnLevelFailed;
     Direction _facingDirection = Direction.Up;
     Vector2 _mapCoordinates;
+    public Vector2 MapCoordinates { get { return _mapCoordinates; } }
     Stack<Vector2> visitedCoords = new Stack<Vector2>();
 
-    private void Start()
-    {
-        Init();
-    }
-
-    void Init()
+    public void Init(Tile startTile)
     {
         _facingDirection = Direction.Up;
         player.transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -65,22 +57,20 @@ public class MapTracker : MonoBehaviour
     {
         bool canMove = CheckIfCanMove();
 
-        if (!canMove) // Fail level if cannot move
-        {
-            FailLevel();
+        if (!canMove) // Return false if cannot move
             return false;
-        }
+
         // Otherwise, move the tracker and build a new bridge
         Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
         MoveTrackerToCoords(destination);
-        if (_mapCoordinates == goalTile.MapCoordinates)
-        {
-            Debug.Log("Reached goal");
-            OnGoalReached?.Invoke();
-        }
         return true;
     }
 
+
+    public void DebugMoveTracker()
+    {
+        MoveTracker();
+    }
     public bool CheckIfCanMove()
     {
         Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
@@ -94,7 +84,5 @@ public class MapTracker : MonoBehaviour
             map.SetBridgeActive(coords, false);
         visitedCoords.Clear();
         Debug.Log("Failed level");
-        OnLevelFailed?.Invoke();
-        Init();
     }
 }

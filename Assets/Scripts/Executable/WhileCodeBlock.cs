@@ -18,8 +18,9 @@ public class WhileCodeBlock : ExecutableCodeBlock
         if (!IsExecutable())
         {
             Debug.LogError("Block is not executable");
-            return;
+            ExecutionResult = false;
         }
+        IsExecuting = true;
         StartCoroutine(ExecuteWhile());
     }
 
@@ -32,7 +33,19 @@ public class WhileCodeBlock : ExecutableCodeBlock
         while (condition.CheckCondition())
         {
             action.Execute();
-            yield return new WaitForSeconds(action.ActionCompleteTime);
+            while (action.IsExecuting)
+            {
+                yield return null;
+            }
+            ExecutionResult = action.ExecutionResult;
+
+            if (!ExecutionResult)
+            {
+                Debug.Log("Execution " + action.gameObject.name + "failed in while");
+                IsExecuting = true;
+                yield break;
+            }
+
             counter++;
             if (counter >= _maxIterations)
             {
@@ -40,6 +53,8 @@ public class WhileCodeBlock : ExecutableCodeBlock
                 break;
             }
         }
+        ExecutionResult = true;
+        IsExecuting = false;
     }
 
     public override void OnPlacement()

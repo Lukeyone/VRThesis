@@ -5,15 +5,16 @@ using UnityEngine;
 // The bringer and destroyer of the code blocks
 public class CodeBlockReaper : MonoBehaviour
 {
-    [SerializeField] List<CodeBlock> _originalBlocks;
+    List<CodeBlock> _originalBlocks;
     List<CodeBlock> _clonedBlocks = new();
-    private void Start()
+    private void Awake()
     {
         CloneBlocks();
     }
 
     void CloneBlocks()
     {
+        if (_originalBlocks == null || _originalBlocks.Count == 0) _originalBlocks = new(GetComponentsInChildren<CodeBlock>());
         _clonedBlocks.Clear();
         foreach (var block in _originalBlocks)
         {
