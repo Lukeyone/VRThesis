@@ -66,23 +66,17 @@ public class MapTracker : MonoBehaviour
         return true;
     }
 
-
-    public void DebugMoveTracker()
-    {
-        MoveTracker();
-    }
     public bool CheckIfCanMove()
     {
         Vector2 destination = map.MoveCoordsInDirection(_mapCoordinates, _facingDirection);
         return map.CheckIfCanMove(_mapCoordinates, _facingDirection) && !visitedCoords.Contains(destination); // Only allow moving past a tile once
     }
 
-    void FailLevel()
+    public void ResetLevel()
     {
         // Destroy all built bridges
         foreach (Vector2 coords in visitedCoords)
             map.SetBridgeActive(coords, false);
         visitedCoords.Clear();
-        Debug.Log("Failed level");
     }
 }

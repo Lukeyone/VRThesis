@@ -10,6 +10,17 @@ public class CodeTray : MonoBehaviour
     public UnityEvent<bool> OnExecutionCompleted;
     List<PlacementSlot> _codeBlocksSlots = new();
 
+    public bool CanStartExecution()
+    {
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            if (slot.PlacedBlock == null) continue;
+            var executable = (ExecutableCodeBlock)slot.PlacedBlock;
+            if (!executable.IsExecutable()) return false;
+        }
+        return true;
+    }
+
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
     {
