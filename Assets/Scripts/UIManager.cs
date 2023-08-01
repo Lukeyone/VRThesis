@@ -5,14 +5,11 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] GameObject _errorPanel;
-    [SerializeField] TextMeshProUGUI _errorText;
+    [SerializeField] CanvasGroup _errorPanel;
 
-    public void DisplayErrorText(string errText)
+    void Start()
     {
-        _errorText.text = errText;
-        _errorPanel.SetActive(true);
     }
 
-    
+
 }
