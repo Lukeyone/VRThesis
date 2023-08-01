@@ -14,9 +14,11 @@ public class DirectionalBlock : ExecutableCodeBlock
         _mapTracker = FindObjectOfType<MapTracker>();
     }
 
-    public override void Execute()
+    protected override IEnumerator CoExecute()
     {
         _mapTracker.RotateCharacter(rotatesLeft);
         ExecutionResult = true;
+        yield return new WaitForSeconds(_actionCompleteTime);
+        IsExecuting = false;
     }
 }

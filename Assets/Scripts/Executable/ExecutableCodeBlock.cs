@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class ExecutableCodeBlock : CodeBlock
 {
-    public float ActionCompleteTime = 3;
     public bool IsExecuting { get; protected set; }
     public bool ExecutionResult { get; protected set; }
+    [SerializeField] protected float _actionCompleteTime = 3;
 
     protected override void Start()
     {
@@ -21,5 +21,19 @@ public abstract class ExecutableCodeBlock : CodeBlock
     {
         return true;
     }
-    public abstract void Execute();
+
+    public void Execute()
+    {
+        ExecutionResult = false;
+        IsExecuting = false;
+        if (!IsExecutable())
+        {
+            Debug.LogError("Block is not executable");
+            return;
+        }
+        IsExecuting = true;
+        StartCoroutine(CoExecute());
+    }
+
+    protected abstract IEnumerator CoExecute();
 }

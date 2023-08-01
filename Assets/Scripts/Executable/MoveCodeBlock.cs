@@ -12,8 +12,10 @@ public class MoveCodeBlock : ExecutableCodeBlock
         _mapTracker = FindObjectOfType<MapTracker>();
     }
 
-    public override void Execute()
+    protected override IEnumerator CoExecute()
     {
         ExecutionResult = _mapTracker.MoveTracker();
+        yield return new WaitForSeconds(_actionCompleteTime);
+        IsExecuting = false;
     }
 }

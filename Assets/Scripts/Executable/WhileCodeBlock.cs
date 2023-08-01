@@ -10,21 +10,10 @@ public class WhileCodeBlock : ExecutableCodeBlock
 
     public override bool IsExecutable()
     {
-        return InputSlot != null && OutputSlot != null;
+        return InputSlot.PlacedBlock != null && OutputSlot.PlacedBlock != null;
     }
 
-    public override void Execute()
-    {
-        if (!IsExecutable())
-        {
-            Debug.LogError("Block is not executable");
-            ExecutionResult = false;
-        }
-        IsExecuting = true;
-        StartCoroutine(ExecuteWhile());
-    }
-
-    IEnumerator ExecuteWhile()
+    protected override IEnumerator CoExecute()
     {
         ConditionalCodeBlock condition = (ConditionalCodeBlock)InputSlot.PlacedBlock;
         ExecutableCodeBlock action = (ExecutableCodeBlock)OutputSlot.PlacedBlock;
@@ -42,7 +31,7 @@ public class WhileCodeBlock : ExecutableCodeBlock
             if (!ExecutionResult)
             {
                 Debug.Log("Execution " + action.gameObject.name + "failed in while");
-                IsExecuting = true;
+                IsExecuting = false;
                 yield break;
             }
 
@@ -50,9 +39,11 @@ public class WhileCodeBlock : ExecutableCodeBlock
             if (counter >= _maxIterations)
             {
                 Debug.LogError("Max iternations reached, breaking out of loop");
-                break;
+                IsExecuting = false;
+                yield break;
             }
         }
+        yield return new WaitForSeconds(_actionCompleteTime);
         ExecutionResult = true;
         IsExecuting = false;
     }

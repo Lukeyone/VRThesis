@@ -13,18 +13,7 @@ public class IfCodeBlock : ExecutableCodeBlock
         return InputSlot.PlacedBlock != null && (OutputForFalse.PlacedBlock != null || OutputForTrue.PlacedBlock != null);
     }
 
-    public override void Execute()
-    {
-        if (!IsExecutable())
-        {
-            Debug.LogError("Block is not executable");
-            ExecutionResult = false;
-            return;
-        }
-        IsExecuting = true;
-        StartCoroutine(ExecuteIf());
-    }
-    IEnumerator ExecuteIf()
+    protected override IEnumerator CoExecute()
     {
         ConditionalCodeBlock condition = (ConditionalCodeBlock)InputSlot.PlacedBlock;
         CodeBlock executedBlock = condition.CheckCondition() ? OutputForTrue.PlacedBlock : OutputForFalse.PlacedBlock;
@@ -37,7 +26,6 @@ public class IfCodeBlock : ExecutableCodeBlock
         }
         ExecutionResult = execBlock.ExecutionResult;
         IsExecuting = false;
-        Debug.Log("executed if code block");
     }
 
     public override void OnPlacement()

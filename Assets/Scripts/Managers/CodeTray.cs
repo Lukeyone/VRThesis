@@ -79,14 +79,12 @@ public class CodeTray : MonoBehaviour
             while (block.IsExecuting)
                 yield return null;
 
-
             if (!block.ExecutionResult)
             {
                 Debug.Log("The block " + block.gameObject.name + " in code tray returned false");
                 OnExecutionCompleted?.Invoke(false);
                 yield break;
             }
-            // yield return new WaitForSeconds(block.ActionCompleteTime);
         }
         OnExecutionCompleted?.Invoke(true);
     }
