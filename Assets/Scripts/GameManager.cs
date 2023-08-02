@@ -12,14 +12,24 @@ public class GameManager : MonoBehaviour
     [SerializeField] Tile goalTile;
     [SerializeField] CodeBlockReaper _blockSpawner;
     [SerializeField] CodeTray _codeTray;
+    [SerializeField] UIManager _uiManager;
     [SerializeField] UnityEvent _onExecutionStarted;
     [SerializeField] UnityEvent _onGameReseted;
+    [SerializeField] UnityEvent _onGameCompleted;
+    [SerializeField] UnityEvent _onGameFailed;
+
     private void Start()
     {
         if (!_isDebugMode)
             ResetScene();
-        _tracker.Init(startTile);
         _codeTray.OnExecutionCompleted.AddListener(OnExecutionCompleted);
+        Init();
+    }
+
+    void Init()
+    {
+        _tracker.Init(startTile);
+        _uiManager.DisplayIntro();
     }
 
     public void StartExecution()
@@ -35,21 +45,17 @@ public class GameManager : MonoBehaviour
 
     void OnExecutionCompleted(bool result)
     {
-        if (result)
+        if (result && _tracker.MapCoordinates == goalTile.MapCoordinates)
         {
-            if (_tracker.MapCoordinates == goalTile.MapCoordinates)
-            {
-                Debug.Log("Reached the end, won");
-            }
-            else
-            {
-                Debug.Log("Didnt reach the end, failed");
-            }
+            Debug.Log("Reached the end, won");
+            _onGameCompleted?.Invoke();
         }
         else
         {
-            Debug.Log("Hit a wall somewhere and failed");
+            Debug.Log("Failed miserably");
+            _onGameFailed?.Invoke();
         }
+        _uiManager.DisplayComplete();
     }
 
     public void ResetScene()

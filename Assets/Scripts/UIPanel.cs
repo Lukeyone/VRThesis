@@ -26,6 +26,7 @@ public class UIPanel : MonoBehaviour
         if (active == _isActive) return;
         _isActive = active;
         _canvasGroup.DOFade(active ? 1 : 0, _fadeDuration);
+        _canvasGroup.interactable = active;
     }
 
     public void EnablePanelFor(float aliveDuration)

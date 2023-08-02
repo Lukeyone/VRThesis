@@ -16,7 +16,11 @@ public class CodeTray : MonoBehaviour
         {
             if (slot.PlacedBlock == null) continue;
             var executable = (ExecutableCodeBlock)slot.PlacedBlock;
-            if (!executable.IsExecutable()) return false;
+            if (!executable.IsExecutable())
+            {
+                OnIllegalExecution?.Invoke("You need to fill the slots of the " + executable.gameObject.name + " block");
+                return false;
+            }
         }
         return true;
     }
@@ -63,18 +67,6 @@ public class CodeTray : MonoBehaviour
 
     public void ExecuteTraySlots()
     {
-        // Perform a check to see if there is any nonexecutable code blocks
-        foreach (PlacementSlot slot in TraySlots)
-        {
-            if (slot.PlacedBlock == null) continue;
-            var block = (ExecutableCodeBlock)slot.PlacedBlock;
-            if (!block.IsExecutable())
-            {
-                Debug.LogError("You need to fill the slots of the " + block.gameObject.name + " block");
-                OnIllegalExecution?.Invoke("You need to fill the slots of the " + block.gameObject.name + " block");
-                return;
-            }
-        }
         // Execute em!
         StartCoroutine(ExecuteSlots());
     }
