@@ -51,15 +51,15 @@ public class TileMapGenerator : MonoBehaviour
         return tilesList[MapCoordsToListIndex(coords)];
     }
 
-    public void SetBridgeActive(Vector2 mapCoords, bool active)
+    public Tile GetTile(Vector2 mapCoords)
     {
         int listIndex = MapCoordsToListIndex(mapCoords);
         if (listIndex < 0 || listIndex >= tilesList.Count)
         {
             Debug.LogError("Coords is out of bounds " + mapCoords);
-            return;
+            return null;
         }
-        tilesList[listIndex].SetBridgeActive(active);
+        return tilesList[listIndex];
     }
 
     void Awake()

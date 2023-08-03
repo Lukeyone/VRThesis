@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class ExecutableCodeBlock : CodeBlock
 {
-    public bool IsExecuting { get; protected set; }
     public bool ExecutionResult { get; protected set; }
+    public bool IsExecuting { get; set; }
     [SerializeField] protected float _actionCompleteTime = 3;
 
     protected override void Start()

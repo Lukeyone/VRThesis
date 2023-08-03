@@ -23,7 +23,7 @@ public class MapTracker : MonoBehaviour
     void MoveTrackerToCoords(Vector2 coords)
     {
         _mapCoordinates = coords;
-        map.SetBridgeActive(_mapCoordinates, true);
+        map.GetTile(_mapCoordinates).SetBridgeActive(true);
         visitedCoords.Push(_mapCoordinates);
         Vector3 tilePos = map.GetTileFromMapCoords(_mapCoordinates).transform.position;
         player.transform.position = tilePos + playerPositionOffsetFromTile;
@@ -72,11 +72,22 @@ public class MapTracker : MonoBehaviour
         return map.CheckIfCanMove(_mapCoordinates, _facingDirection) && !visitedCoords.Contains(destination); // Only allow moving past a tile once
     }
 
-    public void ResetLevel()
+    public void ResetLevel(Tile startTile)
+    {
+        StartCoroutine(CoResetLevel(startTile));
+    }
+
+    IEnumerator CoResetLevel(Tile startTile)
     {
         // Destroy all built bridges
         foreach (Vector2 coords in visitedCoords)
-            map.SetBridgeActive(coords, false);
+        {
+            Tile tile = map.GetTile(coords);
+            tile.SetBridgeActive(false);
+            while (tile.IsExecuting)
+                yield return null;
+        }
         visitedCoords.Clear();
+        Init(startTile);
     }
 }

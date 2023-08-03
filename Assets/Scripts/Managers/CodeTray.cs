@@ -53,7 +53,18 @@ public class CodeTray : MonoBehaviour
 
     public void AddPlacementSlots(PlacementSlot[] slots)
     {
+        if (slots == null || slots.Length == 0) return;
         _codeBlocksSlots.AddRange(slots);
+    }
+
+    public void RemovePlacementSlots(PlacementSlot[] slots)
+    {
+        if (slots == null || slots.Length == 0) return;
+
+        foreach (var s in slots)
+        {
+            _codeBlocksSlots.Remove(s);
+        }
     }
 
     public void ResetTraySlots()
@@ -61,7 +72,7 @@ public class CodeTray : MonoBehaviour
         _codeBlocksSlots.Clear();
         foreach (PlacementSlot slot in TraySlots)
         {
-            slot.PlacedBlock = null;
+            slot.RemovePlacedBlock();
         }
     }
 

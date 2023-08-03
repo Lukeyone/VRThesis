@@ -48,9 +48,8 @@ public class WhileCodeBlock : ExecutableCodeBlock
         IsExecuting = false;
     }
 
-    public override void OnPlacement()
+    protected override PlacementSlot[] GetPlacementSlots()
     {
-        PlacementSlot[] slots = { InputSlot, OutputSlot };
-        _codeTray.AddPlacementSlots(slots);
+        return new PlacementSlot[] { InputSlot, OutputSlot };
     }
 }

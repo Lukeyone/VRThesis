@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class IfCodeBlock : ExecutableCodeBlock
 {
@@ -28,9 +29,8 @@ public class IfCodeBlock : ExecutableCodeBlock
         IsExecuting = false;
     }
 
-    public override void OnPlacement()
+    protected override PlacementSlot[] GetPlacementSlots()
     {
-        PlacementSlot[] slots = { InputSlot, OutputForFalse, OutputForTrue };
-        _codeTray.AddPlacementSlots(slots);
+        return new PlacementSlot[] { InputSlot, OutputForFalse, OutputForTrue };
     }
 }

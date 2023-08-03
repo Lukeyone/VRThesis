@@ -9,6 +9,8 @@ public abstract class CodeBlock : MonoBehaviour
     protected XRGrabInteractable _grabInteractable;
     public BlockType Type { get; protected set; }
     protected CodeTray _codeTray;
+    public PlacementSlot AttachedToSlot { get; protected set; }
+
     protected virtual void Start()
     {
         _grabInteractable = GetComponent<XRGrabInteractable>();
@@ -17,18 +19,31 @@ public abstract class CodeBlock : MonoBehaviour
         _codeTray = FindObjectOfType<CodeTray>();
     }
 
-    protected virtual void OnGrab(SelectEnterEventArgs args)
+    protected void OnGrab(SelectEnterEventArgs args)
     {
+        if (AttachedToSlot != null)
+        {
+            AttachedToSlot.RemovePlacedBlock();
+            _codeTray.RemovePlacementSlots(GetPlacementSlots());
+            AttachedToSlot = null;
+        }
         _codeTray.DisplaySlotsFor(this);
     }
 
-    protected virtual void OnRelease(SelectExitEventArgs args)
+    protected virtual PlacementSlot[] GetPlacementSlots()
+    {
+        return new PlacementSlot[] { };
+    }
+
+    protected void OnRelease(SelectExitEventArgs args)
     {
         _codeTray.DisableHolographicSlots();
     }
 
-    public virtual void OnPlacement()
+    public void OnPlacement(PlacementSlot slot)
     {
+        AttachedToSlot = slot;
+        _codeTray.AddPlacementSlots(GetPlacementSlots());
     }
 }
 

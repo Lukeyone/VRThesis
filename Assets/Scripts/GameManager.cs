@@ -60,10 +60,12 @@ public class GameManager : MonoBehaviour
 
     public void ResetScene()
     {
+
         _codeTray.ResetTraySlots();
         _blockSpawner.ResetBlocks();
-        _tracker.ResetLevel();
-        _tracker.Init(startTile);
+        _tracker.ResetLevel(startTile);
         _onGameReseted?.Invoke();
     }
+
+
 }
