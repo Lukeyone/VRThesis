@@ -9,9 +9,33 @@ public class IfCodeBlock : ExecutableCodeBlock
     public PlacementSlot OutputForTrue;
     public PlacementSlot OutputForFalse;
 
+    protected override void Start()
+    {
+        base.Start();
+        OutputForFalse.ParentBlock = this;
+        OutputForTrue.ParentBlock = this;
+        InputSlot.ParentBlock = this;
+    }
+
     public override bool IsExecutable()
     {
         return InputSlot.PlacedBlock != null && (OutputForFalse.PlacedBlock != null || OutputForTrue.PlacedBlock != null);
+    }
+
+    public override int GetBlockHeight()
+    {
+        int falseHeight = 1;
+        if (OutputForFalse.PlacedBlock != null)
+            falseHeight += ((ExecutableCodeBlock)OutputForFalse.PlacedBlock).GetBlockHeight();
+        else
+            falseHeight += 1;
+
+        int trueHeight = 1;
+        if (OutputForTrue.PlacedBlock != null)
+            trueHeight += ((ExecutableCodeBlock)OutputForTrue.PlacedBlock).GetBlockHeight();
+        else
+            trueHeight += 1;
+        return falseHeight > trueHeight ? falseHeight : trueHeight;
     }
 
     protected override IEnumerator CoExecute()

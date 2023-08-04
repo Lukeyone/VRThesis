@@ -7,10 +7,26 @@ public class WhileCodeBlock : ExecutableCodeBlock
     public PlacementSlot InputSlot;
     public PlacementSlot OutputSlot;
     [SerializeField] int _maxIterations = 30;
+    protected override void Start()
+    {
+        base.Start();
+        InputSlot.ParentBlock = this;
+        OutputSlot.ParentBlock = this;
+    }
 
     public override bool IsExecutable()
     {
         return InputSlot.PlacedBlock != null && OutputSlot.PlacedBlock != null;
+    }
+
+    public override int GetBlockHeight()
+    {
+        int height = 1;
+        if (OutputSlot.PlacedBlock != null)
+            height += ((ExecutableCodeBlock)OutputSlot.PlacedBlock).GetBlockHeight();
+        else
+            height += 1;
+        return height;
     }
 
     protected override IEnumerator CoExecute()
