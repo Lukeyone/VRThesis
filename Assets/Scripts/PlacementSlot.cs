@@ -13,11 +13,6 @@ public class PlacementSlot : MonoBehaviour
     bool _canPlaceBlock = true;
     MeshRenderer _renderer;
     Collider _collider;
-    public int SlotDepth = -99;
-    void Update()
-    {
-        SlotDepth = GetSlotDepth();
-    }
 
     int GetSlotDepth()
     {

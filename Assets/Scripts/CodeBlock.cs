@@ -10,6 +10,33 @@ public abstract class CodeBlock : MonoBehaviour
     public BlockType Type { get; protected set; }
     protected CodeTray _codeTray;
     public PlacementSlot AttachedToSlot { get; protected set; }
+    public int AttachedDepth = -1; // The depth of the block when it is attached to a slot, -1 when not attached
+    /// <summary>
+    ///  The height level of the code block, e.g. if it is a while block with an action, the height of the while block will be 1 + 1 = 2. Normal blocks 
+    //// without an output placement slot will return 1 by default 
+    /// </summary>
+    public virtual int GetBlockHeight()
+    {
+        return 1;
+    }
+    [System.Serializable]
+    public struct DepthScaleKVP
+    {
+        public int Depth;
+        public float Scale;
+    }
+    [SerializeField] DepthScaleKVP[] ScaleAtDepths;
+
+    protected void UpdateScale()
+    {
+        foreach (var kvp in ScaleAtDepths)
+        {
+            if (kvp.Depth == AttachedDepth)
+            {
+                transform.localScale = Vector3.one * kvp.Scale;
+            }
+        }
+    }
 
     protected virtual void Start()
     {
@@ -26,6 +53,7 @@ public abstract class CodeBlock : MonoBehaviour
             AttachedToSlot.RemovePlacedBlock();
             _codeTray.RemovePlacementSlots(GetPlacementSlots());
             AttachedToSlot = null;
+            UpdateScale();
         }
         _codeTray.DisplaySlotsFor(this);
     }
@@ -44,6 +72,7 @@ public abstract class CodeBlock : MonoBehaviour
     {
         AttachedToSlot = slot;
         _codeTray.AddPlacementSlots(GetPlacementSlots());
+        UpdateScale();
     }
 }
 
