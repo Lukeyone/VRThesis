@@ -29,13 +29,17 @@ public abstract class CodeBlock : MonoBehaviour
 
     protected void UpdateScale()
     {
+        bool hasUpdated = false;
         foreach (var kvp in ScaleAtDepths)
         {
             if (kvp.Depth == AttachedDepth)
             {
                 transform.localScale = Vector3.one * kvp.Scale;
+                hasUpdated = true;
+                break;
             }
         }
+        if (!hasUpdated) transform.localScale = Vector3.one;
     }
 
     protected virtual void Start()

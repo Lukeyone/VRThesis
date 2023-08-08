@@ -11,7 +11,7 @@ public class PlacementSlot : MonoBehaviour
     [SerializeField] float _blockPlaceCoolDownDuration = 2f;
     public ExecutableCodeBlock ParentBlock { get; set; } // The block that this placement slot belongs to
     bool _canPlaceBlock = true;
-    MeshRenderer _renderer;
+    MeshRenderer[] _renderers;
     Collider _collider;
 
     int GetSlotDepth()
@@ -34,22 +34,27 @@ public class PlacementSlot : MonoBehaviour
                 return;
             }
         }
-        _renderer.enabled = true;
+        foreach (var r in _renderers)
+        {
+            r.enabled = true;
+        }
         _collider.enabled = true;
     }
 
     public void DisableSlotHolographic()
     {
-        _renderer.enabled = false;
+        foreach (var r in _renderers)
+        {
+            r.enabled = false;
+        }
         _collider.enabled = false;
     }
 
     void Start()
     {
-        _renderer = GetComponent<MeshRenderer>();
+        _renderers = GetComponentsInChildren<MeshRenderer>();
         _collider = GetComponent<Collider>();
-        _renderer.enabled = false;
-        _collider.enabled = false;
+        DisableSlotHolographic();
         _collider.isTrigger = true;
     }
 
@@ -75,19 +80,13 @@ public class PlacementSlot : MonoBehaviour
     {
         PlacedBlock = block;
         block.GetComponent<XRGrabInteractable>().enabled = false;
-        block.transform.parent = transform.parent;
-        block.transform.localPosition = transform.localPosition;
-        block.transform.localRotation = Quaternion.identity;
-        block.OnPlacement(this);
-        block.GetComponent<XRGrabInteractable>().enabled = true;
         _canPlaceBlock = false;
-        if (block.Type == BlockType.ExecutableCodeBlock)
-        {
-            var execBlock = (ExecutableCodeBlock)block;
-            execBlock.AttachedDepth = GetSlotDepth();
-        }
-
-        Debug.Log("Placed block " + block.gameObject.name + " at " + gameObject.name);
+        block.AttachedDepth = GetSlotDepth();
+        block.transform.parent = transform;
+        block.transform.localPosition = Vector3.zero;
+        block.transform.localRotation = Quaternion.identity;
+        block.GetComponent<XRGrabInteractable>().enabled = true;
+        block.OnPlacement(this);
     }
 
     public void RemovePlacedBlock()
