@@ -86,7 +86,7 @@ public class PlacementSlot : MonoBehaviour
         block.transform.localPosition = Vector3.zero;
         block.transform.localRotation = Quaternion.identity;
         block.GetComponent<XRGrabInteractable>().enabled = true;
-        block.OnPlacement(this);
+        block.PerformPlacement(this);
     }
 
     public void RemovePlacedBlock()

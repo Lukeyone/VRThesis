@@ -28,6 +28,8 @@ public class CodeTray : MonoBehaviour
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
     {
+        RemovePlacementSlotsFor(codeBlock);
+
         foreach (PlacementSlot slot in TraySlots)
         {
             slot.DisplaySlotHolographic(codeBlock);
@@ -51,14 +53,16 @@ public class CodeTray : MonoBehaviour
         }
     }
 
-    public void AddPlacementSlots(PlacementSlot[] slots)
+    public void AddPlacementSlotsFor(CodeBlock codeBlock)
     {
+        PlacementSlot[] slots = codeBlock.GetPlacementSlots();
         if (slots == null || slots.Length == 0) return;
         _codeBlocksSlots.AddRange(slots);
     }
 
-    public void RemovePlacementSlots(PlacementSlot[] slots)
+    public void RemovePlacementSlotsFor(CodeBlock codeBlock)
     {
+        PlacementSlot[] slots = codeBlock.GetPlacementSlots();
         if (slots == null || slots.Length == 0) return;
 
         foreach (var s in slots)

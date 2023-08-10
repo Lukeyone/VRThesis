@@ -7,14 +7,17 @@ public class CodeBlockReaper : MonoBehaviour
 {
     List<CodeBlock> _originalBlocks;
     List<CodeBlock> _clonedBlocks = new();
-    private void Awake()
+    CodeTray _codeTray;
+
+    void Awake()
     {
+        _codeTray = FindObjectOfType<CodeTray>();
         CloneBlocks();
     }
 
     void CloneBlocks()
     {
-        if (_originalBlocks == null || _originalBlocks.Count == 0) _originalBlocks = new(GetComponentsInChildren<CodeBlock>());
+        RegisterCodeBlocksEvents();
         _clonedBlocks.Clear();
         foreach (var block in _originalBlocks)
         {
@@ -23,6 +26,33 @@ public class CodeBlockReaper : MonoBehaviour
             cloned.gameObject.name = block.gameObject.name;
             _clonedBlocks.Add(cloned);
         }
+    }
+
+    void RegisterCodeBlocksEvents()
+    {
+        if (_originalBlocks == null || _originalBlocks.Count == 0) _originalBlocks = new(GetComponentsInChildren<CodeBlock>());
+        foreach (CodeBlock block in _originalBlocks)
+        {
+            block.OnGrabEvent += HandleCodeBlockGrab;
+            block.OnReleaseEvent += HandleCodeBlockRelease;
+            block.OnPlacementEvent += HandleCodeBlockPlacement;
+        }
+    }
+
+    void HandleCodeBlockGrab(CodeBlock block)
+    {
+        _codeTray.DisplaySlotsFor(block);
+    }
+
+    void HandleCodeBlockRelease(CodeBlock block)
+    {
+        _codeTray.DisableHolographicSlots();
+        if (block.transform.parent == null) block.transform.parent = transform;
+    }
+
+    void HandleCodeBlockPlacement(CodeBlock block)
+    {
+        _codeTray.AddPlacementSlotsFor(block);
     }
 
     public void ResetBlocks()

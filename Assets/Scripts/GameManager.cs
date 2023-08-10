@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         _onExecutionStarted?.Invoke();
+        
         _codeTray.ExecuteTraySlots();
     }
 

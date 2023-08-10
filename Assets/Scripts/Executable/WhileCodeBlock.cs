@@ -64,7 +64,7 @@ public class WhileCodeBlock : ExecutableCodeBlock
         IsExecuting = false;
     }
 
-    protected override PlacementSlot[] GetPlacementSlots()
+    public override PlacementSlot[] GetPlacementSlots()
     {
         return new PlacementSlot[] { InputSlot, OutputSlot };
     }

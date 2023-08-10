@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 
 [RequireComponent(typeof(XRGrabInteractable))]
@@ -8,7 +9,6 @@ public abstract class CodeBlock : MonoBehaviour
 {
     protected XRGrabInteractable _grabInteractable;
     public BlockType Type { get; protected set; }
-    protected CodeTray _codeTray;
     public PlacementSlot AttachedToSlot { get; protected set; }
     public int AttachedDepth = -1; // The depth of the block when it is attached to a slot, -1 when not attached
     /// <summary>
@@ -26,6 +26,9 @@ public abstract class CodeBlock : MonoBehaviour
         public float Scale;
     }
     [SerializeField] DepthScaleKVP[] ScaleAtDepths;
+    public UnityAction<CodeBlock> OnGrabEvent;
+    public UnityAction<CodeBlock> OnReleaseEvent;
+    public UnityAction<CodeBlock> OnPlacementEvent;
 
     protected void UpdateScale()
     {
@@ -39,45 +42,49 @@ public abstract class CodeBlock : MonoBehaviour
                 break;
             }
         }
-        if (!hasUpdated) transform.localScale = Vector3.one;
+        if (!hasUpdated)
+        {
+            transform.localScale = Vector3.one;
+            Debug.Log("Updated scale to 1");
+        }
     }
 
     protected virtual void Start()
     {
         _grabInteractable = GetComponent<XRGrabInteractable>();
-        _grabInteractable.selectEntered.AddListener(OnGrab);
-        _grabInteractable.selectExited.AddListener(OnRelease);
-        _codeTray = FindObjectOfType<CodeTray>();
+        _grabInteractable.selectEntered.AddListener(PerformGrab);
+        _grabInteractable.selectExited.AddListener(PerformRelease);
     }
 
-    protected void OnGrab(SelectEnterEventArgs args)
+    protected void PerformGrab(SelectEnterEventArgs args)
     {
         if (AttachedToSlot != null)
         {
             AttachedToSlot.RemovePlacedBlock();
-            _codeTray.RemovePlacementSlots(GetPlacementSlots());
             AttachedToSlot = null;
-            UpdateScale();
         }
-        _codeTray.DisplaySlotsFor(this);
+        OnGrabEvent.Invoke(this);
+        UpdateScale();
     }
 
-    protected virtual PlacementSlot[] GetPlacementSlots()
+    public void PerformPlacement(PlacementSlot slot)
+    {
+        AttachedToSlot = slot;
+        UpdateScale();
+        OnPlacementEvent.Invoke(this);
+    }
+
+    public virtual PlacementSlot[] GetPlacementSlots()
     {
         return new PlacementSlot[] { };
     }
 
-    protected void OnRelease(SelectExitEventArgs args)
+    protected void PerformRelease(SelectExitEventArgs args)
     {
-        _codeTray.DisableHolographicSlots();
+        UpdateScale();
+        OnReleaseEvent.Invoke(this);
     }
 
-    public void OnPlacement(PlacementSlot slot)
-    {
-        AttachedToSlot = slot;
-        _codeTray.AddPlacementSlots(GetPlacementSlots());
-        UpdateScale();
-    }
 }
 
 public enum BlockType

@@ -669,9 +669,9 @@ MonoBehaviour:
   - Depth: -1
     Scale: 1
   - Depth: 1
-    Scale: 1
+    Scale: 1.4
   - Depth: 2
-    Scale: 0.6
+    Scale: 0.4
   _actionCompleteTime: 3
   InputSlot: {fileID: 1344009198820943998}
   OutputForTrue: {fileID: 6445820740165197535}
