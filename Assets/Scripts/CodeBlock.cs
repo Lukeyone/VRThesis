@@ -28,7 +28,24 @@ public abstract class CodeBlock : MonoBehaviour
     [SerializeField] DepthScaleKVP[] ScaleAtDepths;
     public UnityAction<CodeBlock> OnGrabEvent;
     public UnityAction<CodeBlock> OnReleaseEvent;
-    public UnityAction<CodeBlock> OnPlacementEvent;
+    public UnityAction<CodeBlock, PlacementSlot> OnPlacementEvent;
+
+    public void DisableGFX()
+    {
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
+            r.enabled = false;
+        }
+        foreach (Collider c in GetComponentsInChildren<Collider>())
+        {
+            c.enabled = false;
+        }
+        foreach (Canvas c in GetComponentsInChildren<Canvas>())
+        {
+            c.enabled = false;
+        }
+        _grabInteractable.enabled = false;
+    }
 
     protected void UpdateScale()
     {
@@ -63,7 +80,7 @@ public abstract class CodeBlock : MonoBehaviour
             AttachedToSlot.RemovePlacedBlock();
             AttachedToSlot = null;
         }
-        OnGrabEvent.Invoke(this);
+        OnGrabEvent?.Invoke(this);
         UpdateScale();
     }
 
@@ -71,7 +88,7 @@ public abstract class CodeBlock : MonoBehaviour
     {
         AttachedToSlot = slot;
         UpdateScale();
-        OnPlacementEvent.Invoke(this);
+        OnPlacementEvent?.Invoke(this, slot);
     }
 
     public virtual PlacementSlot[] GetPlacementSlots()
@@ -82,9 +99,8 @@ public abstract class CodeBlock : MonoBehaviour
     protected void PerformRelease(SelectExitEventArgs args)
     {
         UpdateScale();
-        OnReleaseEvent.Invoke(this);
+        OnReleaseEvent?.Invoke(this);
     }
-
 }
 
 public enum BlockType

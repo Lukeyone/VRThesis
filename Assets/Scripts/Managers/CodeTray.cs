@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CodeTray : MonoBehaviour
+public abstract class CodeTray : MonoBehaviour
 {
     public List<PlacementSlot> TraySlots = new();
-    public UnityEvent<string> OnIllegalExecution;
-    public UnityEvent<bool> OnExecutionCompleted;
-    List<PlacementSlot> _codeBlocksSlots = new();
+    public UnityAction<string> OnIllegalExecution;
+    public UnityAction OnExecutionStarted;
+    public UnityAction<bool> OnExecutionCompleted;
+    protected List<PlacementSlot> _codeBlocksSlots = new();
 
     public bool CanStartExecution()
     {
@@ -28,8 +29,8 @@ public class CodeTray : MonoBehaviour
     /// If user grabs a code block, we display the available slots on tray 
     public void DisplaySlotsFor(CodeBlock codeBlock)
     {
-        RemovePlacementSlotsFor(codeBlock);
-
+        RemovePlacementSlotsFrom(codeBlock);
+        Debug.Log("Displaying slots for " + codeBlock.gameObject.name);
         foreach (PlacementSlot slot in TraySlots)
         {
             slot.DisplaySlotHolographic(codeBlock);
@@ -53,14 +54,15 @@ public class CodeTray : MonoBehaviour
         }
     }
 
-    public void AddPlacementSlotsFor(CodeBlock codeBlock)
+    public void AddPlacementSlotsFrom(CodeBlock codeBlock, PlacementSlot placedSlot)
     {
+        if (!TraySlots.Contains(placedSlot) && !_codeBlocksSlots.Contains(placedSlot)) return;
         PlacementSlot[] slots = codeBlock.GetPlacementSlots();
         if (slots == null || slots.Length == 0) return;
         _codeBlocksSlots.AddRange(slots);
     }
 
-    public void RemovePlacementSlotsFor(CodeBlock codeBlock)
+    public void RemovePlacementSlotsFrom(CodeBlock codeBlock)
     {
         PlacementSlot[] slots = codeBlock.GetPlacementSlots();
         if (slots == null || slots.Length == 0) return;
@@ -80,30 +82,17 @@ public class CodeTray : MonoBehaviour
         }
     }
 
-    public void ExecuteTraySlots()
+    public void ExecuteTray()
     {
-        // Execute em!
-        StartCoroutine(ExecuteSlots());
-    }
-
-    IEnumerator ExecuteSlots()
-    {
-        foreach (PlacementSlot slot in TraySlots)
+        if (!CanStartExecution())
         {
-            if (slot.PlacedBlock == null) continue;
-            var block = (ExecutableCodeBlock)slot.PlacedBlock;
-            block.Execute();
-
-            while (block.IsExecuting)
-                yield return null;
-
-            if (!block.ExecutionResult)
-            {
-                Debug.Log("The block " + block.gameObject.name + " in code tray returned false");
-                OnExecutionCompleted?.Invoke(false);
-                yield break;
-            }
+            Debug.LogError("Can't start execution");
+            return;
         }
-        OnExecutionCompleted?.Invoke(true);
+        OnExecutionStarted?.Invoke();
+        // Execute em!
+        StartCoroutine(CoExecute());
     }
+
+    protected abstract IEnumerator CoExecute();
 }

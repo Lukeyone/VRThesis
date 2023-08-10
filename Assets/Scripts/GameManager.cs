@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Tile startTile;
     [SerializeField] Tile goalTile;
     [SerializeField] CodeBlockReaper _blockSpawner;
-    [SerializeField] CodeTray _codeTray;
+    [SerializeField] ExecutionTray _codeTray;
     [SerializeField] UIManager _uiManager;
     [SerializeField] UnityEvent _onExecutionStarted;
     [SerializeField] UnityEvent _onGameReseted;
@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
     {
         if (!_isDebugMode)
             ResetScene();
-        _codeTray.OnExecutionCompleted.AddListener(OnExecutionCompleted);
+        _codeTray.OnExecutionStarted += _onExecutionStarted.Invoke;
+        _codeTray.OnExecutionCompleted += OnExecutionCompleted;
         Init();
     }
 
@@ -30,18 +31,6 @@ public class GameManager : MonoBehaviour
     {
         _tracker.Init(startTile);
         _uiManager.DisplayIntro();
-    }
-
-    public void StartExecution()
-    {
-        if (!_codeTray.CanStartExecution())
-        {
-            Debug.LogError("Can't start execution");
-            return;
-        }
-        _onExecutionStarted?.Invoke();
-        
-        _codeTray.ExecuteTraySlots();
     }
 
     void OnExecutionCompleted(bool result)
@@ -61,12 +50,9 @@ public class GameManager : MonoBehaviour
 
     public void ResetScene()
     {
-
         _codeTray.ResetTraySlots();
         _blockSpawner.ResetBlocks();
         _tracker.ResetLevel(startTile);
         _onGameReseted?.Invoke();
     }
-
-
 }

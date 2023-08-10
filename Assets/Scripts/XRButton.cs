@@ -116,7 +116,6 @@ public class XRButton : XRBaseInteractable
 
             if (inPosition)
             {
-                Debug.Log("Button pressed");
                 OnPress.Invoke();
             }
             else

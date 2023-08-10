@@ -1,18 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class FunctionTray : MonoBehaviour
+public class FunctionCreationTray : CodeTray
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] FunctionCodeBlock _blockPrefab;
+    [SerializeField] Transform _newBlockParent;
+    [SerializeField] GameObject startButton;
+    public UnityAction<FunctionCodeBlock> OnFunctionCodeBlockCreated;
+    protected override IEnumerator CoExecute()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log("Executing ");
+        startButton.SetActive(false);
+        FunctionCodeBlock block = Instantiate(_blockPrefab, _newBlockParent);
+        List<ExecutableCodeBlock> codeBlocks = new();
+        foreach (PlacementSlot slot in TraySlots)
+        {
+            if (slot.PlacedBlock == null) continue;
+            codeBlocks.Add((ExecutableCodeBlock)slot.PlacedBlock);
+            slot.PlacedBlock.DisableGFX();
+        }
+        block.Initialize(codeBlocks.ToArray());
+        ResetTraySlots();
+        OnFunctionCodeBlockCreated?.Invoke(block);
+        yield return null;
     }
 }

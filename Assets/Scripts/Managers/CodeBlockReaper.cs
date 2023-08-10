@@ -7,11 +7,10 @@ public class CodeBlockReaper : MonoBehaviour
 {
     List<CodeBlock> _originalBlocks;
     List<CodeBlock> _clonedBlocks = new();
-    CodeTray _codeTray;
-
+    TraysManager _traysManager;
     void Awake()
     {
-        _codeTray = FindObjectOfType<CodeTray>();
+        _traysManager = FindObjectOfType<TraysManager>();
         CloneBlocks();
     }
 
@@ -33,27 +32,10 @@ public class CodeBlockReaper : MonoBehaviour
         if (_originalBlocks == null || _originalBlocks.Count == 0) _originalBlocks = new(GetComponentsInChildren<CodeBlock>());
         foreach (CodeBlock block in _originalBlocks)
         {
-            block.OnGrabEvent += HandleCodeBlockGrab;
-            block.OnReleaseEvent += HandleCodeBlockRelease;
-            block.OnPlacementEvent += HandleCodeBlockPlacement;
+            _traysManager.RegisterBlock(block);
         }
     }
 
-    void HandleCodeBlockGrab(CodeBlock block)
-    {
-        _codeTray.DisplaySlotsFor(block);
-    }
-
-    void HandleCodeBlockRelease(CodeBlock block)
-    {
-        _codeTray.DisableHolographicSlots();
-        if (block.transform.parent == null) block.transform.parent = transform;
-    }
-
-    void HandleCodeBlockPlacement(CodeBlock block)
-    {
-        _codeTray.AddPlacementSlotsFor(block);
-    }
 
     public void ResetBlocks()
     {
