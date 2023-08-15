@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] UIManager _uiManager;
     [SerializeField] UnityEvent _onExecutionStarted;
     [SerializeField] UnityEvent _onGameReseted;
-    [SerializeField] UnityEvent _onGameCompleted;
+    [SerializeField] UnityEvent _onGameVictory;
     [SerializeField] UnityEvent _onGameFailed;
 
     private void Start()
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         if (result && _tracker.MapCoordinates == goalTile.MapCoordinates)
         {
             Debug.Log("Reached the end, won");
-            _onGameCompleted?.Invoke();
+            _onGameVictory?.Invoke();
         }
         else
         {

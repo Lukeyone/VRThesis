@@ -11,7 +11,7 @@ public class UIPanel : MonoBehaviour
     CanvasGroup _canvasGroup;
     bool _isActive = false;
 
-    void Start()
+    void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
     }

@@ -11,8 +11,15 @@ public enum Direction
 
 public class TileMapGenerator : MonoBehaviour
 {
-    [SerializeField] List<Tile> tilesList = new List<Tile>();
-    [SerializeField] int mapWidth = 3;
+    public Tile tilePrefab;
+    public Tile obstaclePrefab;
+    public int Width = 3;
+    public int Height = 3;
+
+    public Transform tilesParent;
+    public Vector2 tilesOffset;
+    public List<Vector2Int> obstacleCoords = new List<Vector2Int>();
+    public List<Tile> tilesList;
 
     // Return true if we can move in that direction
     public bool CheckIfCanMove(Vector2 startMapCoords, Direction direction)
@@ -62,27 +69,10 @@ public class TileMapGenerator : MonoBehaviour
         return tilesList[listIndex];
     }
 
-    void Awake()
-    {
-        SetTilesCoords();
-    }
-
     public int MapCoordsToListIndex(Vector2 coords)
     {
-        if (coords.x < 0 || coords.x >= mapWidth || coords.y < 0 || coords.y >= mapWidth)
+        if (coords.x < 0 || coords.x >= Height || coords.y < 0 || coords.y >= Width)
             return -999;
-        return (int)(coords.x * mapWidth + coords.y);
-    }
-
-    void SetTilesCoords()
-    {
-        int currentRow = -1;
-        for (int i = 0; i < tilesList.Count; i++)
-        {
-            int remainder = i % mapWidth;
-            if (remainder == 0)
-                currentRow++;
-            tilesList[i].MapCoordinates = new Vector2(currentRow, remainder);
-        }
+        return (int)(coords.x * Width + coords.y);
     }
 }
