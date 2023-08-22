@@ -10,7 +10,7 @@ public class Tile : MonoBehaviour
     [SerializeField] GameObject debugBridge;
     bool bridgeIsBuilt = false;
     public bool IsExecuting { get; private set; }
-    [SerializeField] float _destroyDuration = 3f;
+    [SerializeField] float _destroyDuration = 1f;
     [SerializeField] UnityEvent _onBridgeDestroyed;
 
     public void SetBridgeActive(bool active)
