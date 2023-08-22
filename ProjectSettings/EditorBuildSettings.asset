@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Demo_Day 1.unity
     guid: ab4a1d1313d1e714f979815dac38ba50
   - enabled: 1
-    path: Assets/Scenes/Level 1.unity
+    path: Assets/Scenes/Level 1 Defunct.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Underground Level 1.unity
