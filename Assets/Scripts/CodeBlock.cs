@@ -10,6 +10,7 @@ public abstract class CodeBlock : MonoBehaviour
     protected XRGrabInteractable _grabInteractable;
     public BlockType Type { get; protected set; }
     public PlacementSlot AttachedToSlot { get; protected set; }
+    protected Collider _collider;
     public int AttachedDepth = -1; // The depth of the block when it is attached to a slot, -1 when not attached
     /// <summary>
     ///  The height level of the code block, e.g. if it is a while block with an action, the height of the while block will be 1 + 1 = 2. Normal blocks 
@@ -71,6 +72,7 @@ public abstract class CodeBlock : MonoBehaviour
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _grabInteractable.selectEntered.AddListener(PerformGrab);
         _grabInteractable.selectExited.AddListener(PerformRelease);
+        _collider = GetComponent<Collider>();
     }
 
     protected void PerformGrab(SelectEnterEventArgs args)
@@ -82,6 +84,7 @@ public abstract class CodeBlock : MonoBehaviour
         }
         OnGrabEvent?.Invoke(this);
         UpdateScale();
+        _collider.isTrigger = true;
     }
 
     public void PerformPlacement(PlacementSlot slot)
@@ -100,6 +103,7 @@ public abstract class CodeBlock : MonoBehaviour
     {
         UpdateScale();
         OnReleaseEvent?.Invoke(this);
+        _collider.isTrigger = false;
     }
 }
 

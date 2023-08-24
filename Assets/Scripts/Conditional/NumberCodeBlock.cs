@@ -32,6 +32,6 @@ public class NumberCodeBlock : ConditionalCodeBlock
 
     void UpdateDisplayedText()
     {
-        _displayedText.text = "Iterations: " + _chosenIterations;
+        _displayedText.text = "" + _chosenIterations;
     }
 }

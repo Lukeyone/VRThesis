@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] bool _isDebugMode = false;
     [SerializeField] MapTracker _tracker;
     [SerializeField] Tile startTile;
-    [SerializeField] Tile goalTile;
+    [SerializeField] Tile[] goalTiles;
     [SerializeField] CodeBlockReaper _blockSpawner;
     [SerializeField] ExecutionTray _codeTray;
     [SerializeField] UIManager _uiManager;
@@ -33,9 +33,18 @@ public class GameManager : MonoBehaviour
         _uiManager.DisplayIntro();
     }
 
+    bool ReachedGoal()
+    {
+        foreach (var goal in goalTiles)
+        {
+            if (goal.MapCoordinates == _tracker.MapCoordinates) return true;
+        }
+        return false;
+    }
+
     void OnExecutionCompleted(bool result)
     {
-        if (result && _tracker.MapCoordinates == goalTile.MapCoordinates)
+        if (result && ReachedGoal())
         {
             Debug.Log("Reached the end, won");
             _onGameVictory?.Invoke();
