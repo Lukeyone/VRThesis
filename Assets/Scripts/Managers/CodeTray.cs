@@ -7,7 +7,6 @@ using UnityEngine.Events;
 public abstract class CodeTray : MonoBehaviour
 {
     protected List<PlacementSlot> TraySlots = new();
-    public UnityAction<string> OnIllegalExecution;
     public UnityAction OnExecutionStarted;
     public UnityAction<bool> OnExecutionCompleted;
     protected List<PlacementSlot> _codeBlocksSlots = new();
@@ -25,10 +24,11 @@ public abstract class CodeTray : MonoBehaviour
             var executable = (ExecutableCodeBlock)slot.PlacedBlock;
             if (!executable.IsExecutable())
             {
-                OnIllegalExecution?.Invoke("You need to fill the slots of the " + executable.gameObject.name + " block");
+                Debug.LogError("Missing an action or condition in the " + executable.gameObject.name);
                 return false;
             }
         }
+
         return true;
     }
 
@@ -92,7 +92,6 @@ public abstract class CodeTray : MonoBehaviour
     {
         if (!CanStartExecution())
         {
-            Debug.LogError("Can't start execution");
             return;
         }
         OnExecutionStarted?.Invoke();

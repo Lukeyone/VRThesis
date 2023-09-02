@@ -14,6 +14,8 @@ public class UIPanel : MonoBehaviour
     void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
+        _isActive = _canvasGroup.alpha != 0;
+        _canvasGroup.blocksRaycasts = _isActive;
     }
 
     public void SetText(string text)
@@ -23,10 +25,10 @@ public class UIPanel : MonoBehaviour
 
     public void SetPanelActive(bool active)
     {
-        if (active == _isActive) return;
         _isActive = active;
         _canvasGroup.DOFade(active ? 1 : 0, _fadeDuration);
         _canvasGroup.interactable = active;
+        _canvasGroup.blocksRaycasts = _isActive;
     }
 
     public void EnablePanelFor(float aliveDuration)

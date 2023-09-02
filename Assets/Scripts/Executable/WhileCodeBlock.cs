@@ -16,7 +16,8 @@ public class WhileCodeBlock : ExecutableCodeBlock
 
     public override bool IsExecutable()
     {
-        return InputSlot.PlacedBlock != null && OutputSlot.PlacedBlock != null;
+        return InputSlot.PlacedBlock != null
+                && OutputSlot.PlacedBlock != null && ((ExecutableCodeBlock)OutputSlot.PlacedBlock).IsExecutable();
     }
 
     public override int GetBlockHeight()

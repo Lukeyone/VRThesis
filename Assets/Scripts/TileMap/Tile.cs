@@ -18,6 +18,8 @@ public class Tile : MonoBehaviour
     void Awake()
     {
         _collider = GetComponent<Collider>();
+        _collider.isTrigger = true;
+
     }
     public void SetBridgeActive(bool active)
     {

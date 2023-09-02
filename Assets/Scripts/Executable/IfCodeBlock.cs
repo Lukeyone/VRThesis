@@ -19,7 +19,8 @@ public class IfCodeBlock : ExecutableCodeBlock
 
     public override bool IsExecutable()
     {
-        return InputSlot.PlacedBlock != null && (OutputForFalse.PlacedBlock != null || OutputForTrue.PlacedBlock != null);
+        return InputSlot.PlacedBlock != null && (OutputForFalse.PlacedBlock != null && ((ExecutableCodeBlock)OutputForFalse.PlacedBlock).IsExecutable()
+        || OutputForTrue.PlacedBlock != null && ((ExecutableCodeBlock)OutputForTrue.PlacedBlock).IsExecutable());
     }
 
     public override int GetBlockHeight()

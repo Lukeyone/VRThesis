@@ -7,7 +7,6 @@ public class PitFallReset : MonoBehaviour
     public Transform ResetPoint;
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Colliding with " + other.gameObject.name);
         if (other.gameObject.tag == "Player")
         {
             CharacterController c = other.GetComponent<CharacterController>();
