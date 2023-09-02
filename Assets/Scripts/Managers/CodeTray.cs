@@ -1,15 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class CodeTray : MonoBehaviour
 {
-    public List<PlacementSlot> TraySlots = new();
+    protected List<PlacementSlot> TraySlots = new();
     public UnityAction<string> OnIllegalExecution;
     public UnityAction OnExecutionStarted;
     public UnityAction<bool> OnExecutionCompleted;
     protected List<PlacementSlot> _codeBlocksSlots = new();
+
+    protected void Awake()
+    {
+        TraySlots = GetComponentsInChildren<PlacementSlot>().ToList(); ;
+    }
 
     public bool CanStartExecution()
     {

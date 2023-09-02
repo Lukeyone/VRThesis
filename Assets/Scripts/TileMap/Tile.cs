@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,7 +13,12 @@ public class Tile : MonoBehaviour
     public bool IsExecuting { get; private set; }
     [SerializeField] float _destroyDuration = 1f;
     [SerializeField] UnityEvent _onBridgeDestroyed;
+    Collider _collider;
 
+    void Awake()
+    {
+        _collider = GetComponent<Collider>();
+    }
     public void SetBridgeActive(bool active)
     {
         // Don't change anything because it's the same value
@@ -20,6 +26,7 @@ public class Tile : MonoBehaviour
         bridgeIsBuilt = active;
         debugBridge.SetActive(active);
         IsExecuting = false;
+        _collider.isTrigger = !active;
         if (!active)
         {
             IsExecuting = true;

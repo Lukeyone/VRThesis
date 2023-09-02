@@ -16,7 +16,7 @@ public class MapTracker : MonoBehaviour
     public void Init(Tile startTile)
     {
         _facingDirection = Direction.Up;
-        player.transform.rotation = Quaternion.Euler(Vector3.zero);
+        player.transform.localRotation = Quaternion.Euler(Vector3.zero);
         MoveTrackerToCoords(startTile.MapCoordinates);
     }
 
@@ -47,9 +47,9 @@ public class MapTracker : MonoBehaviour
                 _facingDirection = isRotateToLeft ? Direction.Up : Direction.Down;
                 break;
         }
-        Vector3 newRot = player.transform.rotation.eulerAngles;
+        Vector3 newRot = player.transform.localRotation.eulerAngles;
         newRot.y = (float)_facingDirection;
-        player.transform.rotation = Quaternion.Euler(newRot);
+        player.transform.localRotation = Quaternion.Euler(newRot);
     }
 
     // Attempts to move the tracker and returns the result of the action
