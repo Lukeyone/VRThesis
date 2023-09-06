@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Tile startTile;
     [SerializeField] Tile[] goalTiles;
     [SerializeField] CodeBlockReaper _blockSpawner;
-    [SerializeField] ExecutionTray _codeTray;
-    [SerializeField] FunctionCreationTray _functionCreationTray;
+    ExecutionTray _codeTray;
+    FunctionCreationTray _functionCreationTray;
     [SerializeField] UIManager _uiManager;
     [SerializeField] UnityEvent _onExecutionStarted;
     [SerializeField] UnityEvent _onGameReseted;
@@ -21,10 +21,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (!_isDebugMode)
-            ResetScene();
+        _codeTray = FindObjectOfType<ExecutionTray>();
+        _functionCreationTray = FindObjectOfType<FunctionCreationTray>();
         _codeTray.OnExecutionStarted += _onExecutionStarted.Invoke;
         _codeTray.OnExecutionCompleted += OnExecutionCompleted;
+        if (!_isDebugMode)
+            ResetScene();
         Init();
     }
 
