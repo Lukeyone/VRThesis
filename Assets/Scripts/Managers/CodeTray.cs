@@ -88,7 +88,7 @@ public abstract class CodeTray : MonoBehaviour
         }
     }
 
-    public void ExecuteTray()
+    public virtual void ExecuteTray()
     {
         if (!CanStartExecution())
         {

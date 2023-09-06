@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Tile[] goalTiles;
     [SerializeField] CodeBlockReaper _blockSpawner;
     [SerializeField] ExecutionTray _codeTray;
+    [SerializeField] FunctionCreationTray _functionCreationTray;
     [SerializeField] UIManager _uiManager;
     [SerializeField] UnityEvent _onExecutionStarted;
     [SerializeField] UnityEvent _onGameReseted;
@@ -60,6 +61,8 @@ public class GameManager : MonoBehaviour
     public void ResetScene()
     {
         _codeTray.ResetTraySlots();
+        _functionCreationTray.ResetTraySlots();
+        _functionCreationTray.DeleteAllSpanwedFunctionBlocks();
         _blockSpawner.ResetBlocks();
         _tracker.ResetLevel(startTile);
         _onGameReseted?.Invoke();
